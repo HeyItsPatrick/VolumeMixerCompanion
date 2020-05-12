@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:volume_mixer/volume_mixer.dart';
 
 String globalIPAddress;
-// String baseURL = "http://" + globals.globalIPAddress + ":8080/volume/";
 String baseURL;
 Future<List<Text>> futureInfo;
 

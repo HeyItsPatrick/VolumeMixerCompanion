@@ -9,11 +9,6 @@ class AboutPanel extends StatefulWidget {
 
 class _AboutPanelState extends State<AboutPanel> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,

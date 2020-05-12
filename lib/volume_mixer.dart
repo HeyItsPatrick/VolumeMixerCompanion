@@ -19,16 +19,15 @@ class VolumeMixerState extends State<VolumeMixer> {
   @override
   void initState() {
     super.initState();
-    futureVolume = getVolumes();
+    futureVolume =
+        getVolumes().catchError((error) => throw ErrorDescription(error));
     //Load system info once here, to prevent API calls every time the drawer is opened
     globals.futureInfo = getSystemInformation();
   }
 
 //total flag true forces a fresh api call and updates the snapshot, false just refreshes the states of the child widgets
-  void rebuild({bool total = false}) {
-    setState(() {
-      if (total) futureVolume = getVolumes();
-    });
+  void rebuild() {
+    setState(() {});
   }
 
   @override
@@ -75,9 +74,8 @@ class VolumeMixerState extends State<VolumeMixer> {
         tooltip: "Refresh volume data",
         child: Icon(Icons.refresh),
         onPressed: () {
-          setState(() {
-            futureVolume = getVolumes();
-          });
+          setState(() => futureVolume = getVolumes()
+              .catchError((error) => throw ErrorDescription(error)));
         },
       ),
     );

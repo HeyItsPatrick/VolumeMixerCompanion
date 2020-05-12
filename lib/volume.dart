@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:volume_mixer/main.dart' as globals;
@@ -23,46 +24,53 @@ class Volume {
 }
 
 Future<List<Volume>> getVolumes() async {
-  String url = globals.baseURL + "all";
-  var response = await http.get(url);
-  if (response.statusCode == 200) {
-    var volumeList = List<Volume>();
-    for (var item in json.decode(response.body)) {
-      volumeList.add(Volume.fromJson(item));
-    }
-    return volumeList;
-  } else {
-    throw Exception("API: GET volume data failed.");
+  var response =
+      await _executeAction(() => http.get(globals.baseURL + "all"), "GET All");
+
+  var volumeList = List<Volume>();
+  for (var item in json.decode(response.body)) {
+    volumeList.add(Volume.fromJson(item));
   }
+  return volumeList;
 }
 
 Future<Volume> getVolumeByProcessID(int processID) async {
-  String url = globals.baseURL + processID.toString();
-  var response = await http.get(url);
-  if (response.statusCode == 200) {
-    return Volume.fromJson(json.decode(response.body));
-  } else {
-    throw Exception("API: GET volume by ID failed.");
-  }
+  var response = await _executeAction(
+      () => http.get(globals.baseURL + processID.toString()), "GET Volume");
+  return Volume.fromJson(json.decode(response.body));
 }
 
 Future<bool> updateVolume(int processId, int newVolume) async {
-  String url =
-      globals.baseURL + processId.toString() + "/" + newVolume.toString();
-  var response = await http.put(url);
+  var response = await _executeAction(
+      () => http.put(
+          globals.baseURL + processId.toString() + "/" + newVolume.toString()),
+      "PUT New Volume");
   return response.body == "true";
 }
 
 Future<List<Text>> getSystemInformation() async {
-  String url = globals.baseURL;
-  var response = await http.get(url);
-  if (response.statusCode == 200) {
-    var infoList = List<Text>();
-    for (var item in json.decode(response.body)) {
-      infoList.add(Text(item.toString()));
+  var response =
+      await _executeAction(() => http.get(globals.baseURL), "GET System");
+
+  var infoList = List<Text>();
+  for (var item in json.decode(response.body)) {
+    infoList.add(Text(item.toString()));
+  }
+  return infoList;
+}
+
+Future<http.Response> _executeAction(
+    Function apiCall, String errorPrefix) async {
+  try {
+    var response = await apiCall();
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      return Future.error(
+          errorPrefix + " response status: " + response.statusCode.toString());
     }
-    return infoList;
-  } else {
-    throw Exception("API: GET system information failed.");
+  } catch (e) {
+    return Future.error(
+        errorPrefix + " failed: " + (e as SocketException).osError.message);
   }
 }
