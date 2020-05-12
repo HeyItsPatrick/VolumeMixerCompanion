@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:volume_mixer/about_panel.dart';
 import 'package:volume_mixer/volume.dart';
 import 'package:volume_mixer/volume_widget.dart';
-
-//TODO: Proper error handling and output. Right now api failures are uncaught
-//TODO: "About" popup with system info, include ability to enter new IP
-//TODO: QR code reader as input for ip address
-//TODO: Only update one volume widget on updates instead of rebuilding the whole mixer
-//TODO: When the Device volume moves, show the change in the app sliders
-//TODO: When slider passes device max, set value to device max and not back to the former value
 
 class VolumeMixer extends StatefulWidget {
   @override
@@ -37,7 +31,9 @@ class VolumeMixerState extends State<VolumeMixer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      appBar: AppBar(title: Text("Title"),),
+      drawer: Drawer(child: AboutPanel(),),
+      body:  SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,

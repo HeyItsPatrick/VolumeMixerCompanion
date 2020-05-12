@@ -53,11 +53,15 @@ Future<bool> updateVolume(int processId, int newVolume) async {
   return response.body == "true";
 }
 
-Future<Text> getSystemInformation() async {
-  String url = baseURL+"system";
+Future<List<Text>> getSystemInformation() async {
+  String url = baseURL;
   var response = await http.get(url);
   if (response.statusCode == 200) {
-    return Text(response.body);
+    var infoList = List<Text>();
+    for (var item in json.decode(response.body)) {
+      infoList.add(Text(item.toString()));
+    }
+    return infoList;
   } else {
     throw Exception("API: GET system information failed.");
   }
