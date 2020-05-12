@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:volume_mixer/about_panel.dart';
+import 'package:volume_mixer/main.dart' as globals;
 import 'package:volume_mixer/volume.dart';
 import 'package:volume_mixer/volume_widget.dart';
 
@@ -19,6 +20,8 @@ class VolumeMixerState extends State<VolumeMixer> {
   void initState() {
     super.initState();
     futureVolume = getVolumes();
+    //Load system info once here, to prevent API calls every time the drawer is opened
+    globals.futureInfo = getSystemInformation();
   }
 
 //total flag true forces a fresh api call and updates the snapshot, false just refreshes the states of the child widgets
@@ -31,9 +34,13 @@ class VolumeMixerState extends State<VolumeMixer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Title"),),
-      drawer: Drawer(child: AboutPanel(),),
-      body:  SafeArea(
+      appBar: AppBar(
+        title: Text("Title"),
+      ),
+      drawer: Drawer(
+        child: AboutPanel(),
+      ),
+      body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,

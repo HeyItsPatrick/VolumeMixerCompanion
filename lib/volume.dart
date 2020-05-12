@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:volume_mixer/main.dart' as globals;
 
-  String baseURL = "http://" + globals.globalIPAddress + ":8080/volume/";
 class Volume {
   int currentVolume;
   int processId;
@@ -24,7 +23,7 @@ class Volume {
 }
 
 Future<List<Volume>> getVolumes() async {
-  String url = baseURL+"all";
+  String url = globals.baseURL + "all";
   var response = await http.get(url);
   if (response.statusCode == 200) {
     var volumeList = List<Volume>();
@@ -38,7 +37,7 @@ Future<List<Volume>> getVolumes() async {
 }
 
 Future<Volume> getVolumeByProcessID(int processID) async {
-  String url = baseURL + processID.toString();
+  String url = globals.baseURL + processID.toString();
   var response = await http.get(url);
   if (response.statusCode == 200) {
     return Volume.fromJson(json.decode(response.body));
@@ -48,13 +47,14 @@ Future<Volume> getVolumeByProcessID(int processID) async {
 }
 
 Future<bool> updateVolume(int processId, int newVolume) async {
-  String url = baseURL + processId.toString() + "/" + newVolume.toString();
+  String url =
+      globals.baseURL + processId.toString() + "/" + newVolume.toString();
   var response = await http.put(url);
   return response.body == "true";
 }
 
 Future<List<Text>> getSystemInformation() async {
-  String url = baseURL;
+  String url = globals.baseURL;
   var response = await http.get(url);
   if (response.statusCode == 200) {
     var infoList = List<Text>();

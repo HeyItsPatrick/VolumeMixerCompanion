@@ -15,8 +15,9 @@ class _VolumeWidgetState extends State<VolumeWidget> {
 
   void adjustVolume(double value) async {
     if (await updateVolume(widget._volume.processId, value.toInt())) {
-      setState(() {widget._volume.currentVolume = value.toInt();
-      _sliderValue = value;
+      setState(() {
+        widget._volume.currentVolume = value.toInt();
+        _sliderValue = value;
       });
     } else {
       setState(() => _sliderValue = widget._volume.currentVolume.toDouble());

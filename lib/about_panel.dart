@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:volume_mixer/volume.dart';
 import 'package:volume_mixer/main.dart' as globals;
 
 class AboutPanel extends StatefulWidget {
@@ -9,12 +8,9 @@ class AboutPanel extends StatefulWidget {
 }
 
 class _AboutPanelState extends State<AboutPanel> {
-  Future<List<Text>> futureInfo;
-
   @override
   void initState() {
     super.initState();
-    futureInfo = getSystemInformation();
   }
 
   @override
@@ -31,13 +27,9 @@ class _AboutPanelState extends State<AboutPanel> {
             Text(globals.globalIPAddress.toString()),
             Text(""),
             FutureBuilder(
-              future: futureInfo,
+              future: globals.futureInfo,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  // var widgetList = List<Widget>();
-                  // for (var item in snapshot.data) {
-                  //   widgetList.add(item);
-                  // }
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -56,7 +48,7 @@ class _AboutPanelState extends State<AboutPanel> {
               child: Text("Enter new IP address"),
               colorBrightness: Brightness.light,
               color: Colors.grey,
-              onPressed: (){ 
+              onPressed: () {
                 Navigator.popUntil(context, ModalRoute.withName("/"));
               },
             ),

@@ -3,6 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:volume_mixer/volume_mixer.dart';
 
 String globalIPAddress;
+// String baseURL = "http://" + globals.globalIPAddress + ":8080/volume/";
+String baseURL;
+Future<List<Text>> futureInfo;
+
 void main() {
   runApp(MyApp());
 }
@@ -13,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Volume Mixer',
       theme: ThemeData(
-brightness: Brightness.dark,
+        brightness: Brightness.dark,
         primaryColorBrightness: Brightness.dark,
         accentColorBrightness: Brightness.dark,
         primarySwatch: Colors.blueGrey,
@@ -54,6 +58,7 @@ class Home extends StatelessWidget {
                     return "Incorrectly formatted IP Address";
                   else {
                     globalIPAddress = value;
+                    baseURL = "http://" + value + ":8080/volume/";
                     return null;
                   }
                 },
