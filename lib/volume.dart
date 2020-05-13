@@ -54,7 +54,7 @@ Future<List<Text>> getSystemInformation() async {
 
   var infoList = List<Text>();
   for (var item in json.decode(response.body)) {
-    infoList.add(Text(item.toString()));
+    infoList.add(Text(item.toString().trim(),textAlign: TextAlign.center,));
   }
   return infoList;
 }
