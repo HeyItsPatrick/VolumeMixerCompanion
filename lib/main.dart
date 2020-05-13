@@ -38,44 +38,56 @@ class Home extends StatelessWidget {
       body: SafeArea(
         child: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text("IP Address"),
-              TextFormField(
-                keyboardType: TextInputType.phone,
-                inputFormatters: [
-                  WhitelistingTextInputFormatter(RegExp("[0-9.]"))
-                ],
-                validator: (value) {
-                  var regEx =
-                      RegExp(r'^\d{1,3}[.]\d{1,3}[.]\d{1,3}[.]\d{1,3}$');
-                  if (value.isEmpty)
-                    return "IP Address is required";
-                  else if (!regEx.hasMatch(value))
-                    return "Incorrectly formatted IP Address";
-                  else {
-                    globalIPAddress = value;
-                    baseURL = "http://" + value + ":8080/volume/";
-                    return null;
-                  }
-                },
-              ),
-              RaisedButton(
-                onPressed: () {
-                  final state = _formKey.currentState;
-                  if (state.validate()) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => VolumeMixer(),
-                      ),
-                    );
-                  }
-                },
-              )
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: "Enter Computer IP Address",
+                    hintText: "123.123.123.123",
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.phone,
+                  inputFormatters: [
+                    WhitelistingTextInputFormatter(RegExp("[0-9.\n]"))
+                  ],
+textInputAction: TextInputAction.done,
+onFieldSubmitted: (value){
+_formKey.currentState.validate();
+},
+                  validator: (value) {
+                    var regEx =
+                        RegExp(r'^\d{1,3}[.]\d{1,3}[.]\d{1,3}[.]\d{1,3}$');
+                    if (value.isEmpty)
+                      return "IP Address is required";
+                    else if (!regEx.hasMatch(value))
+                      return "Incorrectly formatted IP Address";
+                    else {
+                      globalIPAddress = value;
+                      baseURL = "http://" + value + ":8080/volume/";
+                      return null;
+                    }
+                  },
+                ),
+                RaisedButton(
+                  child: Text("Connect"),
+                  onPressed: () {
+                    final state = _formKey.currentState;
+                    if (state.validate()) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VolumeMixer(),
+                        ),
+                      );
+                    }
+                  },
+                )
+              ],
+            ),
           ),
         ),
       ),
