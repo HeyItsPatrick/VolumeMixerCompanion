@@ -15,6 +15,7 @@ class VolumeMixer extends StatefulWidget {
 
 class VolumeMixerState extends State<VolumeMixer> {
   Future<List<Volume>> futureVolume;
+  double deviceVolumeCap;
 
   @override
   void initState() {
