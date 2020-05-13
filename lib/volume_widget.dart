@@ -19,10 +19,13 @@ class _VolumeWidgetState extends State<VolumeWidget> {
         widget._volume.currentVolume = value.toInt();
         _sliderValue = value;
       });
+      if(widget._volume.processId<0){
+        //if successful Device update, refresh the whole Mixer to update max caps
+    parent.VolumeMixer.of(context).rebuild();
+      }
     } else {
       setState(() => _sliderValue = widget._volume.currentVolume.toDouble());
     }
-    parent.VolumeMixer.of(context).rebuild();
   }
 
   @override
