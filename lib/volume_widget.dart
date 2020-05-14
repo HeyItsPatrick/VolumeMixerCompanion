@@ -20,7 +20,7 @@ class _VolumeWidgetState extends State<VolumeWidget> {
     //Use the color change to dynamically "disable" any volume changes until there is a response from the API
     if (thumbColor == disabledColor) return;
     //Slide up to the device limit without jerking back to starting position if you go over
-    if (value > parent.VolumeMixer.of(context).deviceVolumeCap)
+    if (value > parent.VolumeMixer.of(context).deviceVolumeCap && widget._volume.processId>=0)
       value = parent.VolumeMixer.of(context).deviceVolumeCap;
 
     //"Disable" the slider while waiting for the API call to finish
