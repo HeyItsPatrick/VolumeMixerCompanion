@@ -5,6 +5,7 @@ import 'package:volume_mixer/volume_mixer.dart';
 
 String globalIPAddress;
 String baseURL;
+String globalPort;
 Future<List<Text>> futureInfo;
 
 void main() => runApp(MyApp());
@@ -63,11 +64,30 @@ class Home extends StatelessWidget {
                   onFieldSubmitted: (value) => _formKey.currentState.validate(),
                   validator: (value) => validateIPAddress(value),
                 ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: "Enter Port Number",
+                    hintText: "5000",
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.phone,
+                  inputFormatters: [
+                    WhitelistingTextInputFormatter(RegExp("[0-9\n]")),
+                  ],
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (value) => _formKey.currentState.validate(),
+                  validator: (value) => validatePort(value),
+                ),
                 RaisedButton(
                   child: Text("Connect"),
                   onPressed: () {
                     final state = _formKey.currentState;
                     if (state.validate()) {
+                      baseURL = "http://" +
+                          globalIPAddress +
+                          ":" +
+                          globalPort +
+                          "/volume/";
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -101,9 +121,16 @@ class Home extends StatelessWidget {
       );
       ScanResult result = await BarcodeScanner.scan(options: options);
       if (result.type == ResultType.Barcode) {
-        String ipAddress = result.rawContent;
-        String validMessage = validateIPAddress(ipAddress);
-        if (validMessage == null) {
+        List<String> splitInput = result.rawContent.split(":");
+        if (splitInput.length != 2)
+          showErrorDialog(
+              "Improperly formatted QR code data.\nShould be {IP Address}:{Port Number}",
+              context);
+        String validMessage = validateIPAddress(splitInput[0]) +
+            "\n" +
+            validatePort(splitInput[1]);
+        if (validMessage.trim().isEmpty) {
+          baseURL = "http://" + globalIPAddress + ":" + globalPort + "/volume/";
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -111,54 +138,15 @@ class Home extends StatelessWidget {
             ),
           );
         } else {
-          showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text("Error"),
-                  content: Text(validMessage),
-                  actions: <Widget>[
-                    FlatButton(
-                        child: Text("OK"),
-                        onPressed: () => Navigator.of(context).pop())
-                  ],
-                );
-              });
+          showErrorDialog(validMessage, context);
         }
       }
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.cameraAccessDenied) {
-        showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (context) {
-              return AlertDialog(
-                title: Text("Error"),
-                content: Text(
-                    "App needs Camera permissions for this functionality."),
-                actions: <Widget>[
-                  FlatButton(
-                      child: Text("OK"),
-                      onPressed: () => Navigator.of(context).pop())
-                ],
-              );
-            });
+        showErrorDialog(
+            "App needs Camera permissions for this functionality.", context);
       } else {
-        showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (context) {
-              return AlertDialog(
-                title: Text("Error"),
-                content: Text("Unknown error: $e"),
-                actions: <Widget>[
-                  FlatButton(
-                      child: Text("OK"),
-                      onPressed: () => Navigator.of(context).pop())
-                ],
-              );
-            });
+        showErrorDialog("Unknown error: $e", context);
       }
     }
   }
@@ -171,8 +159,36 @@ class Home extends StatelessWidget {
       return "Incorrectly formatted IP Address";
     else {
       globalIPAddress = value;
-      baseURL = "http://" + value + ":8080/volume/";
-      return null;
+      return "";
     }
+  }
+
+  String validatePort(String value) {
+    var regEx = RegExp(r'^\d+$');
+    if (value.isEmpty)
+      return "Port number is required";
+    else if (!regEx.hasMatch(value))
+      return "Incorrectly formatted Port number";
+    else {
+      globalPort = value;
+      return "";
+    }
+  }
+
+  void showErrorDialog(String errorMessage, BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text(errorMessage),
+            actions: <Widget>[
+              FlatButton(
+                  child: Text("OK"),
+                  onPressed: () => Navigator.of(context).pop())
+            ],
+          );
+        });
   }
 }

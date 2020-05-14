@@ -19,7 +19,7 @@ class Volume {
       processId: json["processID"],
       programName: json["programName"],
       //This will throw "could not instantiate image codec" exception forever because Dart doesn't know the file extention for this image type
-      icon: Image.memory(base64Decode(json["programIcon"])),
+      icon: Image.memory(base64Decode(json["programIcon"] ?? "")),
     );
   }
 }

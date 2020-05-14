@@ -17,6 +17,8 @@ class _AboutPanelState extends State<AboutPanel> {
       children: <Widget>[
         Text("Current IP Address:"),
         Text(globals.globalIPAddress.toString()),
+        Text("Port Number:"),
+        Text(globals.globalPort.toString()),
         Text(""),
         FutureBuilder(
           future: globals.futureInfo,
