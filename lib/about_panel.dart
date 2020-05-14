@@ -28,7 +28,10 @@ class _AboutPanelState extends State<AboutPanel> {
                 children: snapshot.data,
               );
             } else if (snapshot.hasError) {
-              return Text("API error: ${snapshot.error}",textAlign: TextAlign.center,);
+              return Text(
+                "API error: ${snapshot.error}",
+                textAlign: TextAlign.center,
+              );
             }
             return Container();
           },

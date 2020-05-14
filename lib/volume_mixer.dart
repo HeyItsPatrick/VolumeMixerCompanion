@@ -26,11 +26,12 @@ class VolumeMixerState extends State<VolumeMixer> {
     globals.futureInfo = getSystemInformation();
   }
 
-//total flag true forces a fresh api call and updates the snapshot, false just refreshes the states of the child widgets
+  //total flag true forces a fresh api call and updates the snapshot, false just refreshes the states of the child widgets
   void rebuild() {
-          var val = getVolumes()
-              .catchError((error) => throw ErrorDescription(error));
-        setState(() {futureVolume=val; });
+    var val = getVolumes().catchError((error) => throw ErrorDescription(error));
+    setState(() {
+      futureVolume = val;
+    });
   }
 
   @override
@@ -78,9 +79,11 @@ class VolumeMixerState extends State<VolumeMixer> {
         child: Icon(Icons.refresh),
         onPressed: () {
           //Leave the function and SetState separate, as the setState callback will error out on the returned Future
-          var val = getVolumes()
-              .catchError((error) => throw ErrorDescription(error));
-        setState(() {futureVolume=val; });
+          var val =
+              getVolumes().catchError((error) => throw ErrorDescription(error));
+          setState(() {
+            futureVolume = val;
+          });
         },
       ),
     );
