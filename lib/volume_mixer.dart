@@ -20,8 +20,7 @@ class VolumeMixerState extends State<VolumeMixer> {
   @override
   void initState() {
     super.initState();
-    futureVolume =
-        getVolumes().catchError((error) => throw ErrorDescription(error));
+    futureVolume = getVolumes().catchError((error) => throw ErrorDescription(error));
     //Load system info once here, to prevent API calls every time the drawer is opened
     globals.futureInfo = getSystemInformation();
   }
@@ -38,7 +37,7 @@ class VolumeMixerState extends State<VolumeMixer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Title"),
+        title: Text("Volume Mixer Companion"),
       ),
       drawer: Drawer(
         child: AboutPanel(),
@@ -79,8 +78,7 @@ class VolumeMixerState extends State<VolumeMixer> {
         child: Icon(Icons.refresh),
         onPressed: () {
           //Leave the function and SetState separate, as the setState callback will error out on the returned Future
-          var val =
-              getVolumes().catchError((error) => throw ErrorDescription(error));
+          var val = getVolumes().catchError((error) => throw ErrorDescription(error));
           setState(() {
             futureVolume = val;
           });

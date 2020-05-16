@@ -41,10 +41,8 @@ class _AboutPanelState extends State<AboutPanel> {
         SizedBox(
           height: 40.0,
         ),
-        FlatButton(
+        RaisedButton(
           child: Text("Enter new IP address"),
-          colorBrightness: Brightness.light,
-          color: Colors.grey,
           onPressed: () {
             Navigator.popUntil(context, ModalRoute.withName("/"));
           },

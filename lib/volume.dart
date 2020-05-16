@@ -25,8 +25,7 @@ class Volume {
 }
 
 Future<List<Volume>> getVolumes() async {
-  var response =
-      await _executeAction(() => http.get(globals.baseURL + "all"), "GET All");
+  var response = await _executeAction(() => http.get(globals.baseURL + "all"), "GET All");
 
   var volumeList = List<Volume>();
   for (var item in json.decode(response.body)) {
@@ -36,22 +35,17 @@ Future<List<Volume>> getVolumes() async {
 }
 
 Future<Volume> getVolumeByProcessID(int processID) async {
-  var response = await _executeAction(
-      () => http.get(globals.baseURL + processID.toString()), "GET Volume");
+  var response = await _executeAction(() => http.get(globals.baseURL + processID.toString()), "GET Volume");
   return Volume.fromJson(json.decode(response.body));
 }
 
 Future<bool> updateVolume(int processId, int newVolume) async {
-  var response = await _executeAction(
-      () => http.put(
-          globals.baseURL + processId.toString() + "/" + newVolume.toString()),
-      "PUT New Volume");
+  var response = await _executeAction(() => http.put(globals.baseURL + processId.toString() + "/" + newVolume.toString()), "PUT New Volume");
   return response.body == "true";
 }
 
 Future<List<Text>> getSystemInformation() async {
-  var response =
-      await _executeAction(() => http.get(globals.baseURL), "GET System");
+  var response = await _executeAction(() => http.get(globals.baseURL), "GET System");
 
   var infoList = List<Text>();
   for (var item in json.decode(response.body)) {
@@ -63,18 +57,15 @@ Future<List<Text>> getSystemInformation() async {
   return infoList;
 }
 
-Future<http.Response> _executeAction(
-    Function apiCall, String errorPrefix) async {
+Future<http.Response> _executeAction(Function apiCall, String errorPrefix) async {
   try {
     var response = await apiCall();
     if (response.statusCode == 200) {
       return response;
     } else {
-      return Future.error(
-          errorPrefix + " response status: " + response.statusCode.toString());
+      return Future.error(errorPrefix + " response status: " + response.statusCode.toString());
     }
   } catch (e) {
-    return Future.error(
-        errorPrefix + " failed: " + (e as SocketException).osError.message);
+    return Future.error(errorPrefix + " failed: " + (e as SocketException).osError.message);
   }
 }
