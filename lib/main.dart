@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
           foregroundColor: background,
         ),
         //Uncontained IconButton,Icon
-        iconTheme: IconThemeData(color: text),
+        iconTheme: IconThemeData(color: secondary),
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(),
           fillColor: surface,

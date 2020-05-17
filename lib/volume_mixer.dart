@@ -13,7 +13,7 @@ class VolumeMixer extends StatefulWidget {
   }
 }
 
-class VolumeMixerState extends State<VolumeMixer> {
+class VolumeMixerState extends State<VolumeMixer> with WidgetsBindingObserver {
   Future<List<Volume>> futureVolume;
   double deviceVolumeCap;
 
@@ -23,6 +23,24 @@ class VolumeMixerState extends State<VolumeMixer> {
     futureVolume = getVolumes().catchError((error) => throw ErrorDescription(error));
     //Load system info once here, to prevent API calls every time the drawer is opened
     globals.futureInfo = getSystemInformation();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    //Reload FutureBuilder when app is brought back to the foreground
+    if (state.index == 0) {
+      var val = getVolumes().catchError((error) => throw ErrorDescription(error));
+      setState(() {
+        futureVolume = val;
+      });
+    }
   }
 
   //total flag true forces a fresh api call and updates the snapshot, false just refreshes the states of the child widgets
