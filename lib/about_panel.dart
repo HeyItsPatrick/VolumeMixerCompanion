@@ -44,7 +44,7 @@ class _AboutPanelState extends State<AboutPanel> {
         RaisedButton(
           child: Text("Enter new IP address"),
           onPressed: () {
-            Navigator.popUntil(context, ModalRoute.withName("/"));
+            Navigator.pushNamed(context, "/Connect");
           },
         ),
       ],

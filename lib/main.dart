@@ -11,12 +11,12 @@ Future<List<Text>> futureInfo;
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  final Color background = Color.fromARGB(255, 18, 18, 18); //black #121212
-  final Color surface = Color.fromARGB(255, 33, 33, 33); //light black #212121
-  final Color primary = Color.fromARGB(255, 31, 41, 51); //greyblue #1F2933
-  final Color primaryVariant = Color.fromARGB(255, 19, 25, 31); //#13191F
-  final Color secondary = Color.fromARGB(255, 241, 202, 161); //tan #F1CAA1
-  final Color secondaryVariant = Color.fromARGB(255, 145, 121, 97); //#917961
+  final Color background = Color(0xFF121212);
+  final Color surface = Color(0xFF212121);
+  final Color primary = Color(0xFF1F2933);
+  final Color primaryVariant = Color(0xFF13191F);
+  final Color secondary = Color(0xFFF1CAA1);
+  final Color secondaryVariant = Color(0xFF917961);
   final Color text = Colors.grey;
 
   @override
@@ -82,7 +82,12 @@ class MyApp extends StatelessWidget {
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Home(),
+      // home: Home(),
+      initialRoute: "/Connect",
+      routes: {
+        "/Connect": (context) => Home(),
+        "/Mixer": (context) => VolumeMixer(),
+      },
     );
   }
 }
@@ -152,12 +157,7 @@ class Home extends StatelessWidget {
                           final state = _formKey.currentState;
                           if (state.validate()) {
                             baseURL = "http://" + globalIPAddress + ":" + globalPort + "/volume/";
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VolumeMixer(),
-                              ),
-                            );
+                            Navigator.pushNamedAndRemoveUntil(context, "/Mixer", (Route<dynamic> route) => false);
                           }
                         },
                       ),
@@ -187,12 +187,7 @@ class Home extends StatelessWidget {
         String validMessage = (validateIPAddress(splitInput[0]) ?? "") + "\n" + (validatePort(splitInput[1]) ?? "");
         if (validMessage.trim().isEmpty) {
           baseURL = "http://" + globalIPAddress + ":" + globalPort + "/volume/";
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => VolumeMixer(),
-            ),
-          );
+          Navigator.pushNamedAndRemoveUntil(context, "/Mixer", (Route<dynamic> route) => false);
         } else {
           showErrorDialog(validMessage, context);
         }
