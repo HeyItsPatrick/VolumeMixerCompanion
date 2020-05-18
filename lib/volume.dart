@@ -7,7 +7,7 @@ import 'package:volume_mixer/main.dart' as globals;
 
 class Volume {
   int currentVolume;
-  int processId;
+  List<int> processId;
   String programName;
   Image icon;
 
@@ -16,7 +16,7 @@ class Volume {
   factory Volume.fromJson(Map<String, dynamic> json) {
     return Volume(
       currentVolume: json["currentVolume"],
-      processId: json["processID"],
+      processId: json["processID"].cast<int>(),
       programName: json["programName"],
       //This will throw "could not instantiate image codec" exception forever because Dart doesn't know the file extention for this image type
       icon: Image.memory(base64Decode(json["programIcon"] ?? "")),
@@ -39,9 +39,13 @@ Future<Volume> getVolumeByProcessID(int processID) async {
   return Volume.fromJson(json.decode(response.body));
 }
 
-Future<bool> updateVolume(int processId, int newVolume) async {
-  var response = await _executeAction(() => http.put(globals.baseURL + processId.toString() + "/" + newVolume.toString()), "PUT New Volume");
-  return response.body == "true";
+Future<bool> updateVolume(List<int> processIds, int newVolume) async {
+  for (var item in processIds) {
+    var response = await _executeAction(() => http.put(globals.baseURL + item.toString() + "/" + newVolume.toString()), "PUT New Volume");
+    if (response.body == "false") return false;
+  }
+  return true;
+  // return response.body == "true";
 }
 
 Future<List<Text>> getSystemInformation() async {

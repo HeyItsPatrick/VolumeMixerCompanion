@@ -20,7 +20,8 @@ class _VolumeWidgetState extends State<VolumeWidget> {
     //Use the color change to dynamically "disable" any volume changes until there is a response from the API
     if (thumbColor == disabledColor) return;
     //Slide up to the device limit without jerking back to starting position if you go over
-    if (value > parent.VolumeMixer.of(context).deviceVolumeCap && widget._volume.processId >= 0)
+    //Volume Process list is ordered by value, so lowest will be first
+    if (value > parent.VolumeMixer.of(context).deviceVolumeCap && widget._volume.processId.first >= 0)
       value = parent.VolumeMixer.of(context).deviceVolumeCap;
 
     //"Disable" the slider while waiting for the API call to finish
@@ -34,7 +35,7 @@ class _VolumeWidgetState extends State<VolumeWidget> {
         widget._volume.currentVolume = value.toInt();
         _sliderValue = value;
       });
-      if (widget._volume.processId < 0) {
+      if (widget._volume.processId.first < 0) {
         //if successful Device update, refresh the whole Mixer to update max caps
         parent.VolumeMixer.of(context).rebuild();
       }
@@ -54,7 +55,7 @@ class _VolumeWidgetState extends State<VolumeWidget> {
   void initState() {
     super.initState();
     _sliderValue = widget._volume.currentVolume.toDouble();
-    if (widget._volume.processId < 0) parent.VolumeMixer.of(context).deviceVolumeCap = widget._volume.currentVolume.toDouble();
+    if (widget._volume.processId.first < 0) parent.VolumeMixer.of(context).deviceVolumeCap = widget._volume.currentVolume.toDouble();
   }
 
   @override
